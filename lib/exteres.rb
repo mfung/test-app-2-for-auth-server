@@ -4,21 +4,21 @@ require 'multi_json'
 module OmniAuth
  module Strategies
 
-   class JoshId < OAuth2
+   class Code < OAuth2
 
     def initialize(app, api_key = nil, secret_key = nil, options = {}, &block)
       client_options = {
         :site =>  CUSTOM_PROVIDER_URL,
-        :authorize_url => "#{CUSTOM_PROVIDER_URL}/auth/josh_id/authorize",
-        :access_token_url => "#{CUSTOM_PROVIDER_URL}/auth/josh_id/access_token"
+        :authorize_url => "#{CUSTOM_PROVIDER_URL}/authorize/exteres/authorize",
+        :access_token_url => "#{CUSTOM_PROVIDER_URL}/authorize/exteres/access_token"
       }
-      super(app, :josh_id, api_key, secret_key, client_options, &block)
+      super(app, :code, api_key, secret_key, client_options, &block)
     end
 
 protected
       
     def user_data
-      @data ||= MultiJson.decode(@access_token.get("/auth/josh_id/user.json"))
+      @data ||= MultiJson.decode(@access_token.get("/authorize/exteres/user.json"))
     end
       
     def request_phase
@@ -37,6 +37,7 @@ protected
           'extra' => {
               'first_name' => user_data['extra']['first_name'],
               'last_name' => user_data['extra']['last_name'],
+              'department' => user_data['extra']['department']
           }
       })
     end
